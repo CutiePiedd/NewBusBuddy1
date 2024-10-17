@@ -53,8 +53,8 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                           horizontal: 30.0,
                           vertical: 20.0,
                         ),
-                        backgroundColor:
-                            const Color.fromARGB(255, 120, 154, 226), // Blue
+                        backgroundColor: const Color.fromARGB(211, 1, 17, 52),
+                        // Blue
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(70),
@@ -76,8 +76,8 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                           horizontal: 30.0,
                           vertical: 20.0,
                         ),
-                        backgroundColor:
-                            const Color.fromARGB(211, 1, 17, 52), // Dark color
+                        backgroundColor: const Color.fromARGB(
+                            255, 120, 154, 226), // Dark color
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(70),
