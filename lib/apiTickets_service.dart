@@ -2,54 +2,74 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiTicketsService {
-  // Use the correct URL where your PHP files are located
-  static const String baseUrl = 'http://localhost/newdatabase';
+  final String apiUrl =
+      "http://localhost/newdatabase"; // Change to your actual URL
 
-  // Create Ticket
+  // Function to create a new ticket
   Future<void> createTicket(Map<String, dynamic> ticketData) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/create_ticket.php'),
-      headers: {
-        'Content-Type': 'application/json', // Specify the content type
-      },
-      body: json.encode(ticketData), // Encode ticketData as JSON
+      Uri.parse('$apiUrl/create_ticket.php'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(ticketData),
     );
-
-    if (response.statusCode == 200) {
-      print('Ticket created: ${response.body}');
-    } else {
-      throw Exception('Failed to create ticket: ${response.body}');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create ticket');
     }
   }
 
-  // Fetch Tickets
+  // Function to fetch tickets from the server
   Future<List<dynamic>> fetchTickets() async {
-    final response = await http.get(Uri.parse('$baseUrl/fetch_tickets.php'));
-
+    final response = await http.get(
+      Uri.parse('$apiUrl/get_tickets.php'),
+      headers: {"Content-Type": "application/json"},
+    );
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load tickets: ${response.body}');
+      throw Exception('Failed to load tickets');
     }
   }
 
-  // Book Ticket
-  Future<void> bookTicket(int ticketId, int seats) async {
+  Future<void> deleteTicket(int id) async {
+    // Update the URL to point to your backend PHP script
+    final response = await http.delete(
+      Uri.parse(
+          'http://localhost/newdatabase/delete_ticket.php?id=$id'), // Correct the URL format
+    );
+
+    print('Delete response status: ${response.statusCode}'); // Debugging line
+
+    if (response.statusCode == 200) {
+      // Deletion successful
+      print('Ticket deleted successfully'); // Optional confirmation
+      return;
+    } else {
+      print('Failed to delete ticket: ${response.body}'); // Debugging line
+      throw Exception('Failed to delete the ticket');
+    }
+  }
+
+  // Function to reserve a ticket
+  Future<void> reserveTicket(int ticketId, int seats, int userId) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/book_ticket.php'),
-      headers: {
-        'Content-Type': 'application/json', // Specify the content type
-      },
-      body: json.encode({
-        'ticket_id': ticketId,
-        'seats': seats,
-      }), // Encode as JSON
+      Uri.parse('$apiUrl/reserve_ticket.php'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "ticket_id": ticketId,
+        "seats": seats,
+        "user_id": userId
+      }), // Include user_id
     );
 
     if (response.statusCode == 200) {
-      print('Booking response: ${response.body}');
+      final responseBody = jsonDecode(response.body);
+      if (responseBody.containsKey('error')) {
+        throw Exception(responseBody['error']);
+      } else {
+        print(responseBody['message']);
+      }
     } else {
-      throw Exception('Failed to book ticket: ${response.body}');
+      throw Exception('Failed to reserve ticket');
     }
   }
 }

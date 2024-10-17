@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:newbusbuddy/screens/cubao_ticket_screen.dart';
-import 'package:newbusbuddy/screens/dagupan_ticket_screen.dart';
+//import 'package:newbusbuddy/screens/cubao_ticket_screen.dart';
+import 'package:newbusbuddy/screens/user_cubaoticket.dart';
+//import 'package:newbusbuddy/screens/dagupan_ticket_screen.dart';
+import 'package:newbusbuddy/screens/user_tickets_screen.dart';
 //import 'package:newbusbuddy/screens/ticket_screen.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart'; // Import CustomScaffold
 
@@ -64,7 +66,7 @@ class IntermediaryScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const DagupanTicketScreen()),
+                        builder: (context) => UserTicketsScreen()),
                   );
                 },
                 child: Material(
@@ -136,7 +138,7 @@ class IntermediaryScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CubaoTicketScreen()),
+                        builder: (context) => UserCubaoTicketsScreen()),
                   );
                 },
                 child: Material(
