@@ -18,6 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
+
 environment:
   sdk: ^3.5.2
 
@@ -28,10 +29,14 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+
   fluttertoast: ^8.0.8
+  mysql1: 0.20.0
   flutter:
     sdk: flutter
+  intl: ^0.18.1 
   shared_preferences: ^2.0.9
+  http: ^1.2.2
     
      
 
@@ -41,10 +46,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   icons_plus: ^4.0.0
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  http: ^1.2.2
+  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -77,6 +83,8 @@ flutter:
     - assets/images/yyy.jpg
     - assets/images/8a53dc94-0893-4126-9cb0-92b03393b6f3.jpg
     - assets/images/gcash.png
+    - assets/images/bg new-01.png
+    - assets/images/logo new (1).png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

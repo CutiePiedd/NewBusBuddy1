@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:newbusbuddy/apiTickets_service.dart';
+import 'package:newbusbuddy/apiCubaoTickets_service.dart';
+//import 'package:newbusbuddy/apiTickets_service.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart';
 
-class DagupanadminTicket extends StatefulWidget {
+class CubaoAdminTicket extends StatefulWidget {
   @override
-  _DagupanadminTicketState createState() => _DagupanadminTicketState();
+  _CubaoAdminTicketState createState() => _CubaoAdminTicketState();
 }
 
-class _DagupanadminTicketState extends State<DagupanadminTicket> {
+class _CubaoAdminTicketState extends State<CubaoAdminTicket> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController busNoController = TextEditingController();
   TextEditingController baseFareController = TextEditingController();
@@ -21,7 +22,7 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
   String ticketStatus = 'active';
 
   bool isLoading = false;
-  List<dynamic> tickets = [];
+  List<dynamic> cubaotickets = [];
 
   final List<String> serviceClassOptions = ['Regular', 'Deluxed'];
   final List<String> locationOptions = ['Dagupan', 'Cubao'];
@@ -67,21 +68,21 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
   final List<String> availableSeats =
       List<String>.generate(49, (index) => (index + 1).toString());
 
-  ApiTicketsService apiService = ApiTicketsService();
+  ApiCubaoTicketsService apiService = ApiCubaoTicketsService();
 
   @override
   void initState() {
     super.initState();
-    _fetchTickets(); // Fetch tickets when the screen loads
+    _fetchCubaoTickets(); // Fetch tickets when the screen loads
   }
 
   // Fetch tickets from backend
-  void _fetchTickets() async {
+  void _fetchCubaoTickets() async {
     try {
       setState(() {
         isLoading = true;
       });
-      tickets = await apiService.fetchTickets();
+      cubaotickets = await apiService.fetchCubaoTickets();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Failed to load tickets: $e"),
@@ -112,11 +113,11 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
         setState(() {
           isLoading = true;
         });
-        await apiService.createTicket(ticketData);
+        await apiService.createCubaoTicket(ticketData);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Ticket Created Successfully"),
         ));
-        _fetchTickets(); // Refresh the list after creating a ticket
+        _fetchCubaoTickets(); // Refresh the list after creating a ticket
         _clearForm(); // Clear the form after submission
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -146,11 +147,11 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
   // Delete a ticket
   void _deleteTicket(int id) async {
     try {
-      await apiService.deleteTicket(id);
+      await apiService.deleteCubaoTicket(id);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Ticket Deleted Successfully"),
       ));
-      _fetchTickets(); // Refresh the list after deletion
+      _fetchCubaoTickets(); // Refresh the list after deletion
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Failed to delete ticket: $e"),
@@ -314,20 +315,22 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
               child: isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                      itemCount: tickets.length,
+                      itemCount: cubaotickets.length,
                       itemBuilder: (context, index) {
-                        var ticket = tickets[index]; // Corrected line
+                        var cubaoticket = cubaotickets[index]; // Corrected line
 
                         return ListTile(
                           title: Text(
-                              'Bus No: ${ticket['bus_no']} - ${ticket['service_class']}'),
+                              'Bus No: ${cubaoticket['bus_no']} - ${cubaoticket['service_class']}'),
                           subtitle: Text(
-                              'From ${ticket['departure_location']} to ${ticket['destination_location']} at ${ticket['departure_time']}'),
+                              'From ${cubaoticket['departure_location']} to ${cubaoticket['destination_location']} at ${cubaoticket['departure_time']}'),
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
-                              print('Deleting ticket with id: ${ticket['id']}');
-                              _deleteTicket(int.parse(ticket['id']));
+                              print(
+                                  'Deleting ticket with id: ${cubaoticket['id']}');
+                              _deleteTicket(int.parse(cubaoticket['id']));
+                              // or whatever field represents the ID
                             },
                           ),
                         );

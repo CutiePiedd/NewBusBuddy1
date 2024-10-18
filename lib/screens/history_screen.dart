@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newbusbuddy/screens/intermediary_screen.dart';
+import 'package:newbusbuddy/screens/ticket_receipt_screen.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart';
 
 class HistoryTicketReceiptScreen extends StatelessWidget {
@@ -45,7 +46,22 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TicketReceiptScreen(
+                              origin: origin,
+                              busNo: busNo,
+                              destination: destination,
+                              seatNo: seatNo,
+                              totalFare: totalFare,
+                              date: date,
+                              selectedSeats: selectedSeats,
+                              tripHours: tripHours,
+                            ),
+                          ),
+                        );
                         // Action for first button
                       },
                       style: ElevatedButton.styleFrom(
@@ -54,7 +70,7 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                           vertical: 20.0,
                         ),
                         backgroundColor:
-                            const Color.fromARGB(255, 120, 154, 226), // Blue
+                            const Color.fromARGB(255, 246, 204, 35), // Blue
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(70),
@@ -69,6 +85,22 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HistoryTicketReceiptScreen(
+                              origin: origin, // Pass the correct value
+                              busNo: busNo, // Pass the correct value
+                              destination: destination,
+                              seatNo: seatNo,
+                              totalFare:
+                                  totalFare, // Ensure totalFare is a valid double
+                              date: date,
+                              selectedSeats: selectedSeats,
+                              tripHours: tripHours,
+                            ),
+                          ),
+                        );
                         // Action for second button
                       },
                       style: ElevatedButton.styleFrom(
@@ -77,7 +109,7 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                           vertical: 20.0,
                         ),
                         backgroundColor:
-                            const Color.fromARGB(211, 1, 17, 52), // Dark color
+                            Color.fromARGB(255, 255, 122, 6), // Dark color
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(70),
@@ -220,7 +252,7 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                           vertical: 20.0,
                         ),
                         backgroundColor:
-                            const Color.fromARGB(211, 1, 17, 52), // Blue
+                            Color.fromARGB(255, 255, 18, 18), // Blue
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(70),
@@ -233,7 +265,7 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.home,
-                            color: Color.fromARGB(210, 255, 255, 255),
+                            color: Color.fromARGB(255, 255, 255, 255),
                             size: 25,
                           ), // Home icon
                           SizedBox(width: 8), // Space between icon and text
@@ -281,7 +313,7 @@ class HistoryTicketReceiptScreen extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.receipt,
-                            color: const Color.fromARGB(211, 1, 17, 52),
+                            color: Color.fromARGB(255, 255, 18, 18),
                             size: 25,
                           ), // Optional: Add text beside the icon
                         ],

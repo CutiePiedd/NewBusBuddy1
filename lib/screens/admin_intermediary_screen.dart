@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newbusbuddy/screens/CuaboAdmin_ticket_screen.dart';
 //import 'package:newbusbuddy/screens/ticket_screen.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart';
 import 'package:newbusbuddy/screens/DagupanAdmin_ticket.dart'; // Import CustomScaffold
@@ -128,8 +129,7 @@ class AdminIntermediaryScreen extends StatelessWidget {
                   // Navigate to the TicketScreen
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => DagupanadminTicket()),
+                    MaterialPageRoute(builder: (context) => CubaoAdminTicket()),
                   );
                 },
                 child: Container(

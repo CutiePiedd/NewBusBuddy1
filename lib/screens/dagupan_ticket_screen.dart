@@ -3,23 +3,64 @@ import 'package:newbusbuddy/screens/history_screen.dart';
 import 'package:newbusbuddy/screens/intermediary_screen.dart';
 import 'package:newbusbuddy/screens/dagupan_seat_selection.dart';
 import 'package:newbusbuddy/screens/ticket_receipt_screen.dart';
-//import 'package:newbusbuddy/screens/seat_selection.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart';
+import 'package:mysql1/mysql1.dart'; // MySQL package to fetch tickets from database
 
-class DagupanTicketScreen extends StatelessWidget {
+class DagupanTicketScreen extends StatefulWidget {
   const DagupanTicketScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    String origin = 'Dagupan';
-    String destination = 'Cubao';
-    String busNo = '101';
-    String seatNo = '12A';
-    String date = '2024-10-01';
-    double totalFare = 498.0;
-    List<int> selectedSeats = [12]; // Example seat numbers
-    String tripHours = '5 Hours';
+  _DagupanTicketScreenState createState() => _DagupanTicketScreenState();
+}
 
+class _DagupanTicketScreenState extends State<DagupanTicketScreen> {
+  List<Map<String, dynamic>> tickets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTicketsFromDatabase(); // Fetch tickets from database
+  }
+
+  Future<void> _fetchTicketsFromDatabase() async {
+    try {
+      // Establish database connection
+      final conn = await MySqlConnection.connect(ConnectionSettings(
+        host:
+            'localhost', // Adjust with your actual database connection settings
+        port: 3306,
+        user: 'root',
+        db: 'newdatabase', // Replace with your actual database name
+        password: '', // Replace with your database password if required
+      ));
+
+      // Query to fetch tickets created by admin
+      var results = await conn.query('SELECT * FROM tickets');
+
+      // Store tickets in the tickets list
+      setState(() {
+        tickets = results.map((row) {
+          return {
+            'id': row['id'],
+            'origin': row['departure_location'],
+            'destination': row['destination_location'],
+            'busNo': row['bus_no'],
+            'serviceClass': row['service_class'],
+            'departureTime': row['departure_time'],
+            'baseFare': row['base_fare'],
+            'tripHours': row['trip_hours'],
+          };
+        }).toList();
+      });
+
+      await conn.close(); // Close the database connection
+    } catch (e) {
+      print('Error fetching tickets: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return CustomScaffold(
       child: Column(
         children: [
@@ -44,21 +85,28 @@ class DagupanTicketScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                _buildTicket(
-                  'Dagupan',
-                  'Cubao',
-                  '101',
-                  'Seat No: 12A',
-                  'Date: 2024-10-01',
-                  'Price: PHP 498',
-                  'Regular Aircon',
-                  context,
-                ),
-              ],
-            ),
+            child: tickets.isEmpty
+                ? const Center(
+                    child:
+                        CircularProgressIndicator()) // Show loader while tickets are being fetched
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: tickets.length,
+                    itemBuilder: (context, index) {
+                      final ticket = tickets[index];
+                      return _buildTicket(
+                        ticket['origin'],
+                        ticket['destination'],
+                        ticket['busNo'],
+                        ticket['serviceClass'],
+                        ticket['departureTime'],
+                        'Price: PHP ${ticket['baseFare']}',
+                        context,
+                        ticket['baseFare'],
+                        ticket['tripHours'],
+                      );
+                    },
+                  ),
           ),
           const SizedBox(height: 120.0),
           Container(
@@ -68,12 +116,12 @@ class DagupanTicketScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Action for home button (navigate to home or intermediary screen)
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const IntermediaryScreen())); // Replace with your actual route
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const IntermediaryScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
@@ -89,40 +137,42 @@ class DagupanTicketScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home,
-                          color: Color.fromARGB(211, 1, 17, 52),
-                          size: 25,
-                        ), // Home icon
-                        // Optional: Add text beside the icon
-                      ],
+                    child: const Icon(
+                      Icons.home,
+                      color: Color.fromARGB(211, 1, 17, 52),
+                      size: 25,
                     ),
                   ),
                 ),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      String origin = 'Dagupan'; // Replace with actual value
+                      String busNo = '123'; // Replace with actual value
+                      String destination =
+                          'Manila'; // Replace with actual value
+                      String seatNo = 'A1'; // Replace with actual value
+                      double totalFare =
+                          500; // Ensure totalFare is calculated properly
+                      String date = '2024-10-12'; // Replace with actual value
+                      List<int> selectedSeats = []; // Replace with actual value
+                      String tripHours = '5 hours'; // Replace with actual value
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => HistoryTicketReceiptScreen(
-                            origin: origin, // Pass the correct value
-                            busNo: busNo, // Pass the correct value
+                            origin: origin,
+                            busNo: busNo,
                             destination: destination,
                             seatNo: seatNo,
-                            totalFare:
-                                totalFare, // Ensure totalFare is a valid double
+                            totalFare: totalFare,
                             date: date,
                             selectedSeats: selectedSeats,
                             tripHours: tripHours,
                           ),
                         ),
                       );
-
-                      // Action for receipt button (navigate to receipt screen or action)
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
@@ -138,16 +188,10 @@ class DagupanTicketScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.receipt,
-                          color: Color.fromARGB(210, 255, 255, 255),
-                          size: 25,
-                        ), // Receipt icon
-                        // Optional: Add text beside the icon
-                      ],
+                    child: const Icon(
+                      Icons.receipt,
+                      color: Color.fromARGB(210, 255, 255, 255),
+                      size: 25,
                     ),
                   ),
                 ),
@@ -164,11 +208,12 @@ class DagupanTicketScreen extends StatelessWidget {
     String origin,
     String destination,
     String busNo,
-    String seatNo,
-    String date,
+    String serviceClass,
+    String departureTime,
     String price,
-    String busType,
     BuildContext context,
+    double baseFare,
+    String tripHours,
   ) {
     return GestureDetector(
       onTap: () async {
@@ -182,19 +227,18 @@ class DagupanTicketScreen extends StatelessWidget {
         );
 
         if (selectedSeats != null) {
-          // Show confirmation bottom sheet after seat selection
           _showConfirmationBottomSheet(
-              context,
-              origin,
-              destination,
-              busNo,
-              seatNo,
-              date,
-              price,
-              selectedSeats, // Pass selected seats here
-              498,
-              '5 Hours' // Base fare
-              );
+            context,
+            origin,
+            destination,
+            busNo,
+            serviceClass,
+            departureTime,
+            price,
+            selectedSeats,
+            baseFare,
+            tripHours,
+          );
         }
       },
       child: Container(
@@ -219,10 +263,7 @@ class DagupanTicketScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4.0),
-                const Icon(
-                  Icons.arrow_forward,
-                  size: 25,
-                ),
+                const Icon(Icons.arrow_forward, size: 25),
                 const SizedBox(width: 4.0),
                 Text(
                   destination,
@@ -238,13 +279,12 @@ class DagupanTicketScreen extends StatelessWidget {
               thickness: 3,
             ),
             const SizedBox(height: 6.0),
-            _buildTwoColumnRow('Bus No.', busNo, 'Departure', '5:00 A.M.'),
+            _buildTwoColumnRow('Bus No.', busNo, 'Departure', departureTime),
             const SizedBox(height: 6.0),
             _buildTwoColumnRow(
-                'Service Class', 'Regular Aircon', 'Trip Hours', '5 Hours'),
+                'Service Class', serviceClass, 'Trip Hours', tripHours),
             const SizedBox(height: 6.0),
-            _buildTwoColumnRow(
-                'Terminal', 'Dagupan, Pangasinan', 'Base Fare', price),
+            _buildTwoColumnRow('Terminal', origin, 'Base Fare', price),
             const SizedBox(height: 6.0),
             _buildTwoColumnRow('Destination', destination),
           ],
@@ -549,7 +589,7 @@ class DagupanTicketScreen extends StatelessWidget {
                             origin: origin,
                             destination: destination,
                             busNo: busNo,
-                            seatNo: seatNo,
+                            seatNo: selectedSeats.join(','),
                             date: date,
                             totalFare: totalFare,
                             selectedSeats: selectedSeats,

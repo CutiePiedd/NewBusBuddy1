@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newbusbuddy/screens/signin_screen.dart';
-import 'package:newbusbuddy/widgets/custom_circular_checkbox.dart';
+//import 'package:newbusbuddy/widgets/custom_circular_checkbox.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart';
 import 'package:newbusbuddy/api_service.dart'; // Import the ApiService
 
@@ -14,7 +14,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formSignUpKey = GlobalKey<FormState>();
   bool acceptTerms = false;
-  Color buttonColor = const Color.fromARGB(255, 8, 2, 66);
+  Color buttonColor = const Color.fromARGB(255, 213, 12, 12);
   bool _obscurePassword = true;
   bool _isContainerMovedUp = false;
 
@@ -61,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Column(
         children: [
           Image.asset(
-            'assets/images/logo_white.png',
+            'assets/images/logo new (1).png',
             height: 250.0,
             fit: BoxFit.contain,
           ),
@@ -138,18 +138,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),
@@ -189,18 +189,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),
@@ -252,18 +252,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),
@@ -319,45 +319,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Color.fromARGB(174, 170, 189, 232),
+                                color: Color.fromARGB(235, 244, 211, 159),
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),
                         const SizedBox(height: 15.0),
 
                         // Accept Terms Checkbox
-                        Row(
-                          children: [
-                            CustomCircularCheckbox(
-                              isChecked: acceptTerms,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  acceptTerms = value!;
-                                });
-                              },
-                            ),
-                            const Text(
-                              '  I accept the terms and conditions',
-                              style: TextStyle(
-                                color: Color.fromARGB(149, 0, 0, 0),
-                                fontFamily: 'GabrielSans',
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 25.0),
 
                         // Sign up button
                         SizedBox(
