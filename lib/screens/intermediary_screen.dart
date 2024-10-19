@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:newbusbuddy/screens/cubao_ticket_screen.dart';
-import 'package:newbusbuddy/screens/dagupan_ticket_screen.dart';
+//import 'package:newbusbuddy/screens/cubao_ticket_screen.dart';
+import 'package:newbusbuddy/screens/user_cubaoticket.dart';
+//import 'package:newbusbuddy/screens/dagupan_ticket_screen.dart';
+import 'package:newbusbuddy/screens/user_tickets_screen.dart';
 //import 'package:newbusbuddy/screens/ticket_screen.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart'; // Import CustomScaffold
 
@@ -64,7 +66,7 @@ class IntermediaryScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const DagupanTicketScreen()),
+                        builder: (context) => UserTicketsScreen()),
                   );
                 },
                 child: Material(
@@ -94,7 +96,7 @@ class IntermediaryScreen extends StatelessWidget {
                         // Transparent overlay
                         Container(
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(180, 2, 33, 58)
+                            color: const Color.fromARGB(180, 209, 211, 213)
                                 .withOpacity(
                                     0.5), // Transparent navy blue overlay
                             borderRadius: BorderRadius.circular(
@@ -136,7 +138,7 @@ class IntermediaryScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CubaoTicketScreen()),
+                        builder: (context) => UserCubaoTicketsScreen()),
                   );
                 },
                 child: Material(
@@ -166,7 +168,7 @@ class IntermediaryScreen extends StatelessWidget {
                         // Transparent overlay
                         Container(
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(180, 2, 33, 58)
+                            color: const Color.fromARGB(180, 209, 211, 213)
                                 .withOpacity(
                                     0.5), // Transparent navy blue overlay
                             borderRadius: BorderRadius.circular(

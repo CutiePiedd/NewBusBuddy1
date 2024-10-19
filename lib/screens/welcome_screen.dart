@@ -16,13 +16,13 @@ class WelcomeScreen extends StatelessWidget {
       child: Column(
         children: [
           Flexible(
-            flex: 2,
+            flex: 1,
             child: Align(
               alignment: Alignment.topCenter, // Align towards the top-center
               child: Padding(
                 padding: const EdgeInsets.only(top: 10.0), // Add top margin
                 child: Image.asset(
-                  'assets/images/logo_white.png', // Path to your logo image
+                  'assets/images/logo new (1).png', // Path to your logo image
                   width: MediaQuery.of(context).size.width *
                       0.5, // Adjust width as needed
                   height: MediaQuery.of(context).size.height *
@@ -108,7 +108,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 20),
               ],
             ),
           ),

@@ -13,7 +13,7 @@ class AdminSignin extends StatefulWidget {
 class _AdminSignin extends State<AdminSignin> {
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
-  Color buttonColor = const Color.fromARGB(255, 8, 2, 66);
+  Color buttonColor = const Color.fromARGB(255, 255, 0, 0);
   bool _isContainerMovedUp = false;
   bool _obscurePassword = true;
 
@@ -63,18 +63,13 @@ class _AdminSignin extends State<AdminSignin> {
       child: Column(
         children: [
           Image.asset(
-            'assets/images/logo_white.png',
+            'assets/images/logo new (1).png',
             height: 250.0,
             fit: BoxFit.contain,
           ),
           Expanded(
             flex: 9,
             child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isContainerMovedUp = !_isContainerMovedUp;
-                });
-              },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0),
                 margin: EdgeInsets.only(top: _isContainerMovedUp ? 100 : 0),
@@ -140,16 +135,16 @@ class _AdminSignin extends State<AdminSignin> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232)),
+                                  color: Color.fromARGB(235, 244, 211, 159)),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232),
+                                  color: Color.fromARGB(235, 244, 211, 159),
                                   width: 1.0),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),
@@ -198,16 +193,16 @@ class _AdminSignin extends State<AdminSignin> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232)),
+                                  color: Color.fromARGB(235, 244, 211, 159)),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232),
+                                  color: Color.fromARGB(235, 244, 211, 159),
                                   width: 1.0),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),

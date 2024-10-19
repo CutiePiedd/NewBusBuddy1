@@ -2,54 +2,134 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiTicketsService {
-  // Use the correct URL where your PHP files are located
-  static const String baseUrl = 'http://localhost/newdatabase';
+  final String apiUrl =
+      "http://localhost/newdatabase"; // Change to your actual URL
 
-  // Create Ticket
+  // Function to create a new ticket
   Future<void> createTicket(Map<String, dynamic> ticketData) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/create_ticket.php'),
-      headers: {
-        'Content-Type': 'application/json', // Specify the content type
-      },
-      body: json.encode(ticketData), // Encode ticketData as JSON
+      Uri.parse('$apiUrl/create_ticket.php'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(ticketData),
     );
-
-    if (response.statusCode == 200) {
-      print('Ticket created: ${response.body}');
-    } else {
-      throw Exception('Failed to create ticket: ${response.body}');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create ticket');
     }
   }
 
-  // Fetch Tickets
+  // Function to fetch tickets from the server
   Future<List<dynamic>> fetchTickets() async {
-    final response = await http.get(Uri.parse('$baseUrl/fetch_tickets.php'));
-
+    final response = await http.get(
+      Uri.parse('$apiUrl/fetch_tickets.php'),
+      headers: {"Content-Type": "application/json"},
+    );
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load tickets: ${response.body}');
+      throw Exception('Failed to load tickets');
     }
   }
 
-  // Book Ticket
-  Future<void> bookTicket(int ticketId, int seats) async {
+  Future<void> deleteTicket(int id) async {
+    final response = await http.delete(
+      Uri.parse('http://localhost/newdatabase/delete_ticket.php'),
+      body: jsonEncode({"id": id}),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete ticket');
+    }
+  }
+
+  Future<void> storeBooking(int ticketId, List<int> selectedSeats,
+      double totalFare, String userId) async {
+    final url =
+        'http://localhost/newdatabase/book_ticket.php'; // Change to your API endpoint
+
+    // Convert selected seats to a string for the database
+    String seatsAvailed = selectedSeats.join(',');
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'ticket_id': ticketId.toString(),
+          'user_id': userId,
+          'seats_availed': seatsAvailed,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Booking successful: ${response.body}');
+      } else {
+        print('Failed to store booking: ${response.body}');
+      }
+    } catch (error) {
+      print('Error storing booking: $error');
+    }
+  }
+
+  // Function to reserve a ticket
+
+  Future<void> makeReservation(
+      int ticketId, int userId, String selectedSeats) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/book_ticket.php'),
-      headers: {
-        'Content-Type': 'application/json', // Specify the content type
+      Uri.parse(
+          'http://localhost/newdatabase/reservations.php'), // Change to your server URL
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: json.encode({
-        'ticket_id': ticketId,
-        'seats': seats,
-      }), // Encode as JSON
+      body: {
+        'ticket_id': ticketId.toString(),
+        'user_id': userId.toString(),
+        'selected_seats': selectedSeats,
+      },
     );
 
     if (response.statusCode == 200) {
-      print('Booking response: ${response.body}');
+      final data = json.decode(response.body);
+      if (data['status'] == 'success') {
+        // Handle successful reservation
+        print(data['message']);
+        // Update UI or notify the user
+      } else {
+        // Handle reservation error
+        print(data['message']);
+      }
     } else {
-      throw Exception('Failed to book ticket: ${response.body}');
+      print('Failed to make reservation: ${response.statusCode}');
     }
+  }
+}
+
+Future<void> reserveTicket(
+    int ticketId, int userId, String selectedSeats) async {
+  final url = Uri.parse(
+      'http://localhost/newdatabase//reserveTicket.php'); // Update URL accordingly
+
+  final body = jsonEncode({
+    'ticket_id': ticketId,
+    'user_id': userId,
+    'selected_seats': selectedSeats,
+  });
+
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: body,
+  );
+
+  if (response.statusCode == 200) {
+    final responseData = jsonDecode(response.body);
+    if (responseData['success']) {
+      print('Ticket reserved successfully!');
+    } else {
+      throw Exception(responseData['message']);
+    }
+  } else {
+    throw Exception('Failed to reserve ticket');
   }
 }

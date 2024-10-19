@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newbusbuddy/api_service.dart';
 import 'package:newbusbuddy/screens/signup_screen.dart';
-import 'package:newbusbuddy/widgets/custom_circular_checkbox.dart';
+//import 'package:newbusbuddy/widgets/custom_circular_checkbox.dart';
 import 'package:newbusbuddy/widgets/custom_scaffold.dart';
 import 'package:newbusbuddy/screens/intermediary_screen.dart';
 
@@ -15,7 +15,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
-  Color buttonColor = const Color.fromARGB(255, 8, 2, 66);
+  Color buttonColor = const Color.fromARGB(255, 213, 12, 12);
   bool _isContainerMovedUp = false;
   bool _obscurePassword = true;
 
@@ -64,18 +64,14 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Column(
         children: [
           Image.asset(
-            'assets/images/logo_white.png',
-            height: 250.0,
+            'assets/images/logo new (1).png',
+            height: 220.0,
             fit: BoxFit.contain,
           ),
+          const SizedBox(height: 25.0),
           Expanded(
             flex: 9,
             child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isContainerMovedUp = !_isContainerMovedUp;
-                });
-              },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0),
                 margin: EdgeInsets.only(top: _isContainerMovedUp ? 100 : 0),
@@ -141,16 +137,16 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232)),
+                                  color: Color.fromARGB(235, 244, 211, 159)),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232),
+                                  color: Color.fromARGB(235, 244, 211, 159),
                                   width: 1.0),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),
@@ -199,56 +195,20 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232)),
+                                  color: Color.fromARGB(235, 244, 211, 159)),
                               borderRadius: BorderRadius.circular(70),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                  color: Color.fromARGB(174, 170, 189, 232),
+                                  color: Color.fromARGB(235, 244, 211, 159),
                                   width: 1.0),
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            fillColor: const Color.fromARGB(174, 170, 189, 232),
+                            fillColor: Color.fromARGB(235, 244, 211, 159),
                             filled: true,
                           ),
                         ),
 
-                        const SizedBox(height: 15.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                CustomCircularCheckbox(
-                                  isChecked: rememberPassword,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      rememberPassword = value!;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  ' Remember me',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(149, 0, 0, 0),
-                                    fontFamily: 'GabrielSans',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: const Text(
-                                'Forgot password?',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontFamily: 'GabrielSans',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                         const SizedBox(height: 15.0),
                         SizedBox(
                           width: double.infinity,

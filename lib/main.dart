@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newbusbuddy/screens/cubao_ticket_screen.dart';
+//import 'package:newbusbuddy/screens/cubao_ticket_screen.dart';
 import 'package:newbusbuddy/screens/intermediary_screen.dart';
 import 'package:newbusbuddy/screens/onboarding_screen.dart'; // Import your OnboardingScreen
 import 'package:newbusbuddy/screens/welcome_screen.dart'; // Import your WelcomeScreen
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       // Define the routes for your app
       routes: {
         '/welcome': (context) => const WelcomeScreen(),
-        '/cubaoTicket': (context) => const CubaoTicketScreen(),
+
         '/intermediaryScreen': (context) => const IntermediaryScreen(),
 
         // Add other routes here

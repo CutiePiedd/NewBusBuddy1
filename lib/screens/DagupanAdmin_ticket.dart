@@ -9,47 +9,44 @@ class DagupanadminTicket extends StatefulWidget {
 
 class _DagupanadminTicketState extends State<DagupanadminTicket> {
   final _formKey = GlobalKey<FormState>();
-
-  // Form field controllers
   TextEditingController busNoController = TextEditingController();
   TextEditingController baseFareController = TextEditingController();
 
-  String selectedServiceClass = 'Regular'; // Default selection
+  String selectedServiceClass = 'Regular';
   String selectedDepartureLocation = 'Dagupan';
   String selectedDestinationLocation = 'Cubao';
-  String selectedDepartureTime = '06:00 A.M.';
+  String selectedDepartureTime = '6:00 A.M.';
   String selectedTripHours = '2';
   String selectedSeats = '1';
-  String ticketStatus = 'active'; // Default status
+  String ticketStatus = 'active';
 
-  // Loading indicator
   bool isLoading = false;
+  List<dynamic> tickets = [];
 
-  // Dropdown options
   final List<String> serviceClassOptions = ['Regular', 'Deluxed'];
   final List<String> locationOptions = ['Dagupan', 'Cubao'];
   final List<String> timeOptions = [
-    '01:00 A.M.',
-    '02:00 A.M.',
-    '03:00 A.M.',
-    '04:00 A.M.',
-    '05:00 A.M.',
-    '06:00 A.M.',
-    '07:00 A.M.',
-    '08:00 A.M.',
-    '09:00 A.M.',
+    '1:00 A.M.',
+    '2:00 A.M.',
+    '3:00 A.M.',
+    '4:00 A.M.',
+    '5:00 A.M.',
+    '6:00 A.M.',
+    '7:00 A.M.',
+    '8:00 A.M.',
+    '9:00 A.M.',
     '10:00 A.M.',
     '11:00 A.M.',
     '12:00 P.M.',
-    '01:00 P.M.',
-    '02:00 P.M.',
-    '03:00 P.M.',
-    '04:00 P.M.',
-    '05:00 P.M.',
-    '06:00 P.M.',
-    '07:00 P.M.',
-    '08:00 P.M.',
-    '09:00 P.M.',
+    '1:00 P.M.',
+    '2:00 P.M.',
+    '3:00 P.M.',
+    '4:00 P.M.',
+    '5:00 P.M.',
+    '6:00 P.M.',
+    '7:00 P.M.',
+    '8:00 P.M.',
+    '9:00 P.M.',
     '10:00 P.M.',
     '11:00 P.M.',
     '12:00 A.M.'
@@ -70,10 +67,35 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
   final List<String> availableSeats =
       List<String>.generate(49, (index) => (index + 1).toString());
 
-  // Submit form
+  ApiTicketsService apiService = ApiTicketsService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTickets(); // Fetch tickets when the screen loads
+  }
+
+  // Fetch tickets from backend
+  void _fetchTickets() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      tickets = await apiService.fetchTickets();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Failed to load tickets: $e"),
+      ));
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // Submit form to create a ticket
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Create ticket data
       Map<String, dynamic> ticketData = {
         'bus_no': busNoController.text,
         'service_class': selectedServiceClass,
@@ -86,40 +108,54 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
         'ticket_status': ticketStatus,
       };
 
-      // Call the API to create a ticket
       try {
         setState(() {
-          isLoading = true; // Start loading
+          isLoading = true;
         });
-
-        ApiTicketsService apiService =
-            ApiTicketsService(); // Create an instance
-        await apiService
-            .createTicket(ticketData); // Call the createTicket method
-
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        await apiService.createTicket(ticketData);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Ticket Created Successfully"),
         ));
-
-        // Optionally, navigate back to the ticket list screen or refresh the list
+        _fetchTickets(); // Refresh the list after creating a ticket
+        _clearForm(); // Clear the form after submission
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Failed to create ticket: $e"),
         ));
       } finally {
         setState(() {
-          isLoading = false; // Stop loading
+          isLoading = false;
         });
       }
     }
   }
 
-  @override
-  void dispose() {
-    busNoController.dispose();
-    baseFareController.dispose();
-    super.dispose();
+  // Clear form fields
+  void _clearForm() {
+    busNoController.clear();
+    baseFareController.clear();
+    selectedServiceClass = 'Regular';
+    selectedDepartureLocation = 'Dagupan';
+    selectedDestinationLocation = 'Cubao';
+    selectedDepartureTime = '6:00 A.M.';
+    selectedTripHours = '2';
+    selectedSeats = '1';
+    ticketStatus = 'active';
+  }
+
+  // Delete a ticket
+  void _deleteTicket(int id) async {
+    try {
+      await apiService.deleteTicket(id);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Ticket Deleted Successfully"),
+      ));
+      _fetchTickets(); // Refresh the list after deletion
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Failed to delete ticket: $e"),
+      ));
+    }
   }
 
   @override
@@ -127,186 +163,178 @@ class _DagupanadminTicketState extends State<DagupanadminTicket> {
     return CustomScaffold(
       child: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          margin: EdgeInsets.only(top: 50),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                spreadRadius: 2,
+        child: Column(
+          children: [
+            // Ticket creation form
+            Form(
+              key: _formKey,
+              child: Expanded(
+                child: ListView(
+                  children: [
+                    TextFormField(
+                      controller: busNoController,
+                      decoration: InputDecoration(labelText: 'Bus No.'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the Bus No.';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: selectedServiceClass,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedServiceClass = newValue!;
+                        });
+                      },
+                      items: serviceClassOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(labelText: 'Service Class'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: selectedDepartureLocation,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedDepartureLocation = newValue!;
+                        });
+                      },
+                      items: locationOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration:
+                          InputDecoration(labelText: 'Departure Location'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: selectedDestinationLocation,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedDestinationLocation = newValue!;
+                        });
+                      },
+                      items: locationOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration:
+                          InputDecoration(labelText: 'Destination Location'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: selectedDepartureTime,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedDepartureTime = newValue!;
+                        });
+                      },
+                      items: timeOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(labelText: 'Departure Time'),
+                    ),
+                    TextFormField(
+                      controller: baseFareController,
+                      decoration: InputDecoration(labelText: 'Base Fare'),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the Base Fare';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: selectedTripHours,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedTripHours = newValue!;
+                        });
+                      },
+                      items: tripHourOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(labelText: 'Trip Hours'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: selectedSeats,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedSeats = newValue!;
+                        });
+                      },
+                      items: availableSeats.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(labelText: 'Available Seats'),
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: ticketStatus,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          ticketStatus = newValue!;
+                        });
+                      },
+                      items: ['active', 'inactive'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(labelText: 'Ticket Status'),
+                    ),
+                    SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: _submitForm,
+                      child: Text('Create Ticket'),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: <Widget>[
-                TextFormField(
-                  controller: busNoController,
-                  decoration: InputDecoration(labelText: 'Bus No.'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the Bus No.';
-                    }
-                    return null;
-                  },
-                ),
-                DropdownButtonFormField<String>(
-                  value: selectedServiceClass,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedServiceClass = newValue!;
-                    });
-                  },
-                  items: serviceClassOptions
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(labelText: 'Service Class'),
-                  validator: (value) =>
-                      value == null ? 'Please select a Service Class' : null,
-                ),
-                DropdownButtonFormField<String>(
-                  value: selectedDepartureLocation,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedDepartureLocation = newValue!;
-                    });
-                  },
-                  items: locationOptions
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(labelText: 'Departure Location'),
-                  validator: (value) => value == null
-                      ? 'Please select a Departure Location'
-                      : null,
-                ),
-                DropdownButtonFormField<String>(
-                  value: selectedDestinationLocation,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedDestinationLocation = newValue!;
-                    });
-                  },
-                  items: locationOptions
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration:
-                      InputDecoration(labelText: 'Destination Location'),
-                  validator: (value) => value == null
-                      ? 'Please select a Destination Location'
-                      : null,
-                ),
-                DropdownButtonFormField<String>(
-                  value: selectedDepartureTime,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedDepartureTime = newValue!;
-                    });
-                  },
-                  items:
-                      timeOptions.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(labelText: 'Departure Time'),
-                  validator: (value) =>
-                      value == null ? 'Please select a Departure Time' : null,
-                ),
-                TextFormField(
-                  controller: baseFareController,
-                  decoration: InputDecoration(labelText: 'Base Fare'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the Base Fare';
-                    }
-                    return null;
-                  },
-                ),
-                DropdownButtonFormField<String>(
-                  value: selectedTripHours,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedTripHours = newValue!;
-                    });
-                  },
-                  items: tripHourOptions
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(labelText: 'Trip Hours'),
-                  validator: (value) =>
-                      value == null ? 'Please select Trip Hours' : null,
-                ),
-                DropdownButtonFormField<String>(
-                  value: selectedSeats,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedSeats = newValue!;
-                    });
-                  },
-                  items: availableSeats
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(labelText: 'Available Seats'),
-                  validator: (value) =>
-                      value == null ? 'Please select Available Seats' : null,
-                ),
-                DropdownButtonFormField<String>(
-                  value: ticketStatus,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      ticketStatus = newValue!;
-                    });
-                  },
-                  items: ['active', 'inactive']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(labelText: 'Ticket Status'),
-                  validator: (value) =>
-                      value == null ? 'Please select Ticket Status' : null,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: isLoading ? null : _submitForm,
-                  child: isLoading
-                      ? CircularProgressIndicator(
-                          color: Colors.white,
-                        )
-                      : Text('Create Ticket'),
-                ),
-              ],
             ),
-          ),
+
+            // Ticket List Display
+            Expanded(
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: tickets.length,
+                      itemBuilder: (context, index) {
+                        var ticket = tickets[index]; // Corrected line
+
+                        return ListTile(
+                          title: Text(
+                              'Bus No: ${ticket['bus_no']} - ${ticket['service_class']}'),
+                          subtitle: Text(
+                              'From ${ticket['departure_location']} to ${ticket['destination_location']} at ${ticket['departure_time']}'),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              print('Deleting ticket with id: ${ticket['id']}');
+                              _deleteTicket(int.parse(ticket['id']));
+                            },
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
         ),
       ),
     );
